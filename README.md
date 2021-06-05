@@ -21,7 +21,7 @@ To get the data for in-code use or storage, make use of the `Scraper` class.
 ```python
 from ut_building_scraper.scrape import Scrape
 
-data = Scraper.building_information()
+data = Scrape.building_information()
 ```
 
 The result is a `pd.dataFrame` with `site_name`, `site_abbreviation`, `building_name`, `building_abbreviation`, `building_number`, `address`, `floors`, `gross_square_feet`, `occupied_since` and `building_image_urls` columns.
