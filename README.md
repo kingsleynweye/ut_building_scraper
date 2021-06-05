@@ -17,7 +17,7 @@ See the Command Line Interface help for instructions:
 python -m ut_building_scraper -h
 ```
 
-To get the data for in-code use or storage, make use of the `Scraper` class.
+To get the data for in-code use or storage, make use of the `Scrape` class.
 ```python
 from ut_building_scraper.scrape import Scrape
 
