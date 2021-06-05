@@ -16,7 +16,7 @@ setuptools.setup(
     description='This repository contains code that may be used to scrape building information from the UT Facilities Services website.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='',
+    url='https://github.com/kingsleynweye/ut_building_scraper.git',
     entry_points = {
         'console_scripts':['ut_building_scraper = ut_building_scraper.__main__:main'],
     },
