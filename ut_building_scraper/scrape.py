@@ -6,23 +6,23 @@ from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
 class Scrape:
-    FACILITIES_URL = 'https://utdirect.utexas.edu/apps/campus/buildings/nlogon/facilities'
-    VP_URL = 'https://utdirect.utexas.edu/apps/campus/buildings/nlogon/facilities'
+    __FACILITIES_URL = 'https://utdirect.utexas.edu/apps/campus/buildings/nlogon/facilities'
+    __PROVOST_URL = ''
 
     @staticmethod
-    def building_information():
+    def facilities():
         data = []
         session = requests.Session()
         retries = Retry(total=5,backoff_factor=1,status_forcelist=[502,503,504])
         session.mount('http://', HTTPAdapter(max_retries=retries))
-        response = session.get(Scrape.FACILITIES_URL)
+        response = session.get(Scrape.__FACILITIES_URL)
         soup = BeautifulSoup(response.text.encode('UTF-8'),'html.parser')
         sites = soup.find('select',{'id':'js-site'}).findAll('option')
 
         for site in sites[1:]:
             site_abbreviation = site.get('value')
             site_name = site.text
-            site_url = os.path.join(Scrape.FACILITIES_URL,site_abbreviation)
+            site_url = os.path.join(Scrape.__FACILITIES_URL,site_abbreviation)
             response = session.get(site_url)
             soup = BeautifulSoup(response.text.encode('UTF-8'),'html.parser')
             hrefs = soup.find('table',{'id':'myTable'}).find('tbody').findAll('a')
@@ -69,3 +69,7 @@ class Scrape:
             data = None
 
         return data
+
+    @staticmethod
+    def provost():
+        data = pd.read_excel(Scrape.__PROVOST_URL)

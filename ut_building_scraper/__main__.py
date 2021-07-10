@@ -8,7 +8,7 @@ def main():
     parser.add_argument('--version', action='version', version='%(prog)s 0.0.1')
     parser.add_argument('-f','--filepath',default=None,dest='filepath',type=str,help='Filepath to write to.')
     args = parser.parse_args()
-    data = Scrape.building_information()
+    data = Scrape.facilities()
 
     if args.filepath:
         extension = args.filepath.split('.')[-1]
