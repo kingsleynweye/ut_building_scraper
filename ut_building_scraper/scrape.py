@@ -11,7 +11,7 @@ class Scrape:
 
     @staticmethod
     def facilities(building_abbreviations=None):
-        sites =  pd.DataFrame(Scrape.get_sites()).explode(column='building_abbreviation',ignore_index=True)
+        sites = pd.DataFrame(Scrape.get_sites()).explode(column='building_abbreviation',ignore_index=True)
 
         if building_abbreviations:
             sites = sites[sites['building_abbreviation'].isin(building_abbreviations)].copy()
@@ -32,11 +32,13 @@ class Scrape:
             soup = BeautifulSoup(response.text.encode('UTF-8'),'html.parser')
             building_data['site_name'] = record['site_name']
             building_data['site_abbreviation'] = record['site_abbreviation']
-            building_data['building_name'] = ''.join(soup.find('h2').text.split('(')[0:-1]).strip()
+            building_data['building_name'] = ''.join(soup.find('h1').text.split('(')[0:-1]).strip()
             building_data['building_abbreviation'] = record['building_abbreviation']
-            building_data['building_number'] = str(soup.find('h2').text.split('-')[-1].replace(')','').strip())
-            building_data['address'] = soup.find('h3').text
-            building_info = soup.find('div',{'id':'collapse1'})
+            building_data['building_number'] = str(soup.find('h1').text.split('-')[-1].replace(')','').strip())
+            building_data['address'] = soup.find('h3').text.strip('\n').strip(' ')
+            h5s = soup.findAll('h5',{'class':'card-header'})
+            building_info = [t for t in h5s if t.text == 'Building Information'][0]
+            building_info = building_info.findNext('table')
             info_keys = building_info.findAll('th')
             info_keys = [key.text for key in info_keys]
             info_values = building_info.findAll('td')
@@ -115,7 +117,7 @@ class Scrape:
             site_url = os.path.join(Scrape.__FACILITIES_URL,site_abbreviation)
             response = session.get(site_url)
             soup = BeautifulSoup(response.text.encode('UTF-8'),'html.parser')
-            hrefs = soup.find('table',{'id':'myTable'}).find('tbody').findAll('a')
+            hrefs = soup.find('table',{'id':'datatable_building_list'}).find('tbody').findAll('a')
             building_abbreviations = [href.text for href in hrefs]
             data.append({
                 'site_abbreviation':site_abbreviation,
